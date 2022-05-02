@@ -27,4 +27,10 @@ public class AuthorController {
     public AuthorDTO getAuthorById(@PathVariable int id) {
         return authorService.getAuthorById(id);
     }
+
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    public AuthorDTO createAuthor(@RequestBody AuthorDTO authorDTO) {
+        return authorService.createAuthor(authorDTO);
+    }
 }

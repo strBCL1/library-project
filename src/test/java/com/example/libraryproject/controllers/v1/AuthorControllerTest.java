@@ -2,6 +2,8 @@ package com.example.libraryproject.controllers.v1;
 
 import com.example.libraryproject.api.v1.model.AuthorDTO;
 import com.example.libraryproject.services.AuthorService;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -14,9 +16,11 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import java.util.List;
 
 import static org.hamcrest.Matchers.equalTo;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -77,5 +81,25 @@ class AuthorControllerTest {
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id", equalTo(authorDTO.getId())));
+    }
+
+    @Test
+    void givenAuthorDto_whenCreateAuthor_thenReturnAuthorDto() throws Exception {
+        AuthorDTO authorDTO = new AuthorDTO();
+        authorDTO.setId(1);
+        authorDTO.setFirstname("firstname");
+
+        when(authorService.createAuthor(any(AuthorDTO.class))).thenReturn(authorDTO);
+
+        mockMvc.perform(post("/authors")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(authorDtoToJsonString(authorDTO)))
+                .andDo(print())
+                .andExpect(jsonPath("$.id", equalTo(authorDTO.getId())))
+                .andExpect(jsonPath("$.firstname", equalTo(authorDTO.getFirstname())));
+    }
+
+    private String authorDtoToJsonString(AuthorDTO authorDTO) throws JsonProcessingException {
+        return new ObjectMapper().writeValueAsString(authorDTO);
     }
 }
