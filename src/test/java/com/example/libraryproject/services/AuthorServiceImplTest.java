@@ -67,7 +67,7 @@ class AuthorServiceImplTest {
     }
 
     @Test
-    void givenAuthor_whenCreateAuthor_thenAuthorDtoEqualsToSavedAuthorDto() {
+    void givenAuthorDto_whenCreateAuthor_thenAuthorDtoEqualsToSavedAuthorDto() {
         final int ID = 1;
 
         AuthorDTO authorDTO = new AuthorDTO();
@@ -85,5 +85,30 @@ class AuthorServiceImplTest {
         assertAll("AuthorDto must have same fields as savedAuthorDto",
                 () -> assertEquals(savedAuthorDTO.getId(), authorDTO.getId()),
                 () -> assertEquals(savedAuthorDTO.getFirstname(), authorDTO.getFirstname()));
+    }
+
+    @Test
+    void givenIdAndAuthorDto_whenUpdateAuthorById_thenAuthorDtoEqualsToUpdatedAuthorDto() {
+        final int ID = 1;
+
+        AuthorDTO authorDTO = new AuthorDTO();
+        authorDTO.setId(ID);
+        authorDTO.setFirstname("firstname");
+        authorDTO.setLastname("lastname");
+
+        Author savedAuthor = new Author();
+        savedAuthor.setId(authorDTO.getId());
+        savedAuthor.setFirstname(authorDTO.getFirstname());
+        savedAuthor.setLastname(authorDTO.getLastname());
+
+        when(authorRepository.save(any(Author.class))).thenReturn(savedAuthor);
+
+        AuthorDTO updatedAuthorDTO = authorService.updateAuthorById(ID, authorDTO);
+
+        assertAll("AuthorDto must have same fields as updatedAuthorDto",
+                () -> assertEquals(ID, updatedAuthorDTO.getId()),
+                () -> assertEquals(authorDTO.getFirstname(), updatedAuthorDTO.getFirstname()),
+                () -> assertEquals(authorDTO.getLastname(), updatedAuthorDTO.getLastname()));
+
     }
 }

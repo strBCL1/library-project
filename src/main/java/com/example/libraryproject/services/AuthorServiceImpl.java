@@ -38,6 +38,13 @@ public class AuthorServiceImpl implements AuthorService {
         return saveAndReturn(authorDTO);
     }
 
+    @Override
+    public AuthorDTO updateAuthorById(int id, AuthorDTO authorDTO) {
+        authorDTO.setId(id);
+
+        return saveAndReturn(authorDTO);
+    }
+
     private AuthorDTO saveAndReturn(AuthorDTO authorDTO) {
         Author author = authorMapper.authorDtoToAuthor(authorDTO);
 

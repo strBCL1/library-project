@@ -12,4 +12,6 @@ public interface AuthorService {
     AuthorDTO getAuthorById(int id);
 
     AuthorDTO createAuthor(AuthorDTO authorDTO);
+
+    AuthorDTO updateAuthorById(int id, AuthorDTO authorDTO);
 }
