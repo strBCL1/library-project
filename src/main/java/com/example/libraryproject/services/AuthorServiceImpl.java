@@ -24,4 +24,11 @@ public class AuthorServiceImpl implements AuthorService {
                 .map(authorMapper::authorToAuthorDto)
                 .toList();
     }
+
+    @Override
+    public AuthorDTO getAuthorById(int id) {
+        return authorRepository.findById(id)
+                .map(authorMapper::authorToAuthorDto)
+                .orElse(null);
+    }
 }

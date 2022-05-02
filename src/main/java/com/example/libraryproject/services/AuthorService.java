@@ -6,4 +6,6 @@ import java.util.List;
 
 public interface AuthorService {
     List<AuthorDTO> getAllAuthors();
+
+    AuthorDTO getAuthorById(int id);
 }

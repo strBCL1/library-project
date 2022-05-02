@@ -11,8 +11,10 @@ import org.mockito.MockitoAnnotations;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.when;
 
 class AuthorServiceImplTest {
@@ -46,5 +48,19 @@ class AuthorServiceImplTest {
         List<AuthorDTO> authorDTOList = authorService.getAllAuthors();
 
         assertEquals(authorList.size(), authorDTOList.size());
+    }
+
+    @Test
+    void givenIdAndAuthor_whenGetAuthorById_thenIdEqualsToAuthorDtoId() {
+        final int ID = 1;
+
+        Author author = new Author();
+        author.setId(ID);
+
+        when(authorRepository.findById(anyInt())).thenReturn(Optional.ofNullable(author));
+
+        AuthorDTO authorDTO = authorService.getAuthorById(author.getId());
+
+        assertEquals(ID, authorDTO.getId());
     }
 }
