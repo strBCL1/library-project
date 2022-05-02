@@ -40,4 +40,10 @@ public class AuthorController {
                                       @RequestBody AuthorDTO authorDTO) {
         return authorService.updateAuthorById(id, authorDTO);
     }
+
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public void deleteAuthorById(@PathVariable int id) {
+        authorService.deleteAuthorById(id);
+    }
 }

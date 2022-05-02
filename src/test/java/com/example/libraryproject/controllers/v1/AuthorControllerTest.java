@@ -18,7 +18,7 @@ import java.util.List;
 import static org.hamcrest.Matchers.equalTo;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -127,5 +127,17 @@ class AuthorControllerTest {
                 .andExpect(jsonPath("$.id", equalTo(authorDTO.getId())))
                 .andExpect(jsonPath("$.firstname", equalTo(authorDTO.getFirstname())))
                 .andExpect(jsonPath("$.lastname", equalTo(authorDTO.getLastname())));
+    }
+
+    @Test
+    void givenId_whenDeleteAuthorById_thenVerifyDeleteOperationsCalledOnce() throws Exception {
+        final int ID = 1;
+
+        mockMvc.perform(delete("/authors/" + ID)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isOk());
+
+        verify(authorService, times(1)).deleteAuthorById(anyInt());
     }
 }
