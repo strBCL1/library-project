@@ -14,6 +14,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import java.util.List;
 
 import static org.hamcrest.Matchers.equalTo;
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -39,7 +40,7 @@ class AuthorControllerTest {
     }
 
     @Test
-    void getAllAuthors() throws Exception {
+    void givenAuthorDtoList_whenGetAllAuthors_thenReturnAuthorDtoList() throws Exception {
         AuthorDTO authorDTO1 = new AuthorDTO();
         authorDTO1.setId(1);
         authorDTO1.setFirstname("firstname_1");
@@ -60,5 +61,21 @@ class AuthorControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.authorDTOList[0].id", equalTo(authorDTO1.getId())));
 
+    }
+
+    @Test
+    void givenIdAndAuthorDto_whenGetAuthorById_thenIdEqualsToAuthorDtoId() throws Exception {
+        final int ID = 1;
+
+        AuthorDTO authorDTO = new AuthorDTO();
+        authorDTO.setId(ID);
+
+        when(authorService.getAuthorById(anyInt())).thenReturn(authorDTO);
+
+        mockMvc.perform(get("/authors/" + ID)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id", equalTo(authorDTO.getId())));
     }
 }
