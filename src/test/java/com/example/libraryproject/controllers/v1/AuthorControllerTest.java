@@ -19,8 +19,7 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -95,11 +94,38 @@ class AuthorControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(authorDtoToJsonString(authorDTO)))
                 .andDo(print())
+                .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.id", equalTo(authorDTO.getId())))
                 .andExpect(jsonPath("$.firstname", equalTo(authorDTO.getFirstname())));
     }
 
     private String authorDtoToJsonString(AuthorDTO authorDTO) throws JsonProcessingException {
         return new ObjectMapper().writeValueAsString(authorDTO);
+    }
+
+    @Test
+    void givenIdAndAuthorDto_whenUpdateAuthorById_thenIdEqualsToReturnAuthorDto() throws Exception {
+        final int ID = 1;
+
+        AuthorDTO authorDTO = new AuthorDTO();
+        authorDTO.setId(ID);
+        authorDTO.setFirstname("firstname");
+        authorDTO.setLastname("lastname");
+
+        AuthorDTO updatedAuthorDTO = new AuthorDTO();
+        updatedAuthorDTO.setId(authorDTO.getId());
+        updatedAuthorDTO.setFirstname(authorDTO.getFirstname());
+        updatedAuthorDTO.setLastname(authorDTO.getLastname());
+
+        when(authorService.updateAuthorById(anyInt(), any(AuthorDTO.class))).thenReturn(updatedAuthorDTO);
+
+        mockMvc.perform(put("/authors/" + ID)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(authorDtoToJsonString(authorDTO)))
+                .andDo(print())
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.id", equalTo(authorDTO.getId())))
+                .andExpect(jsonPath("$.firstname", equalTo(authorDTO.getFirstname())))
+                .andExpect(jsonPath("$.lastname", equalTo(authorDTO.getLastname())));
     }
 }

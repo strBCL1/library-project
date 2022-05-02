@@ -33,4 +33,11 @@ public class AuthorController {
     public AuthorDTO createAuthor(@RequestBody AuthorDTO authorDTO) {
         return authorService.createAuthor(authorDTO);
     }
+
+    @PutMapping("/{id}")
+    @ResponseStatus(HttpStatus.CREATED)
+    public AuthorDTO updateAuthorById(@PathVariable int id,
+                                      @RequestBody AuthorDTO authorDTO) {
+        return authorService.updateAuthorById(id, authorDTO);
+    }
 }
