@@ -45,6 +45,11 @@ public class AuthorServiceImpl implements AuthorService {
         return saveAndReturn(authorDTO);
     }
 
+    @Override
+    public void deleteAuthorById(int id) {
+        authorRepository.deleteById(id);
+    }
+
     private AuthorDTO saveAndReturn(AuthorDTO authorDTO) {
         Author author = authorMapper.authorDtoToAuthor(authorDTO);
 

@@ -9,7 +9,6 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -17,7 +16,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 class AuthorServiceImplTest {
 
@@ -27,6 +26,8 @@ class AuthorServiceImplTest {
     AuthorMapper authorMapper = AuthorMapper.INSTANCE;
 
     AuthorService authorService;
+
+    final static int ID = 1;
 
     @BeforeEach
     void setUp() {
@@ -54,7 +55,6 @@ class AuthorServiceImplTest {
 
     @Test
     void givenIdAndAuthor_whenGetAuthorById_thenIdEqualsToAuthorDtoId() {
-        final int ID = 1;
 
         Author author = new Author();
         author.setId(ID);
@@ -68,7 +68,6 @@ class AuthorServiceImplTest {
 
     @Test
     void givenAuthorDto_whenCreateAuthor_thenAuthorDtoEqualsToSavedAuthorDto() {
-        final int ID = 1;
 
         AuthorDTO authorDTO = new AuthorDTO();
         authorDTO.setId(ID);
@@ -89,7 +88,6 @@ class AuthorServiceImplTest {
 
     @Test
     void givenIdAndAuthorDto_whenUpdateAuthorById_thenAuthorDtoEqualsToUpdatedAuthorDto() {
-        final int ID = 1;
 
         AuthorDTO authorDTO = new AuthorDTO();
         authorDTO.setId(ID);
@@ -110,5 +108,13 @@ class AuthorServiceImplTest {
                 () -> assertEquals(authorDTO.getFirstname(), updatedAuthorDTO.getFirstname()),
                 () -> assertEquals(authorDTO.getLastname(), updatedAuthorDTO.getLastname()));
 
+    }
+
+    @Test
+    void givenAuthorId_whenDeleteAuthorById_thenVerifyDeleteWasCalledOnce() {
+
+        authorService.deleteAuthorById(ID);
+
+        verify(authorRepository, times(1)).deleteById(anyInt());
     }
 }
