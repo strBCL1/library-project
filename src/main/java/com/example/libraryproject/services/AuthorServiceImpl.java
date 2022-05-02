@@ -2,6 +2,7 @@ package com.example.libraryproject.services;
 
 import com.example.libraryproject.api.v1.mapper.AuthorMapper;
 import com.example.libraryproject.api.v1.model.AuthorDTO;
+import com.example.libraryproject.domain.Author;
 import com.example.libraryproject.repositories.AuthorRepository;
 import org.springframework.stereotype.Service;
 
@@ -30,5 +31,18 @@ public class AuthorServiceImpl implements AuthorService {
         return authorRepository.findById(id)
                 .map(authorMapper::authorToAuthorDto)
                 .orElse(null);
+    }
+
+    @Override
+    public AuthorDTO createAuthor(AuthorDTO authorDTO) {
+        return saveAndReturn(authorDTO);
+    }
+
+    private AuthorDTO saveAndReturn(AuthorDTO authorDTO) {
+        Author author = authorMapper.authorDtoToAuthor(authorDTO);
+
+        Author savedAuthor = authorRepository.save(author);
+
+        return authorMapper.authorToAuthorDto(savedAuthor);
     }
 }

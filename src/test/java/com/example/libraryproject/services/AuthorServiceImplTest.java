@@ -13,7 +13,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
+import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.when;
 
@@ -62,5 +64,26 @@ class AuthorServiceImplTest {
         AuthorDTO authorDTO = authorService.getAuthorById(author.getId());
 
         assertEquals(ID, authorDTO.getId());
+    }
+
+    @Test
+    void givenAuthor_whenCreateAuthor_thenAuthorDtoEqualsToSavedAuthorDto() {
+        final int ID = 1;
+
+        AuthorDTO authorDTO = new AuthorDTO();
+        authorDTO.setId(ID);
+        authorDTO.setFirstname("firstname");
+
+        Author savedAuthor = new Author();
+        savedAuthor.setId(authorDTO.getId());
+        savedAuthor.setFirstname(authorDTO.getFirstname());
+
+        when(authorRepository.save(any(Author.class))).thenReturn(savedAuthor);
+
+        AuthorDTO savedAuthorDTO = authorService.createAuthor(authorDTO);
+
+        assertAll("AuthorDto must have same fields as savedAuthorDto",
+                () -> assertEquals(savedAuthorDTO.getId(), authorDTO.getId()),
+                () -> assertEquals(savedAuthorDTO.getFirstname(), authorDTO.getFirstname()));
     }
 }
