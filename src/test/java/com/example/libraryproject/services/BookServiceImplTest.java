@@ -16,7 +16,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 class BookServiceImplTest {
 
@@ -105,5 +105,12 @@ class BookServiceImplTest {
         assertAll("UpdatedBookDto must have same fields as BookDto",
                 () -> assertEquals(bookDTO.getId(), updatedBookDTO.getId()),
                 () -> assertEquals(bookDTO.getTitle(), updatedBookDTO.getTitle()));
+    }
+
+    @Test
+    void givenId_whenDeleteBookById_thenVerifyDeleteBookByIdCalledOnce() {
+        bookRepository.deleteById(ID);
+
+        verify(bookRepository, times(1)).deleteById(anyInt());
     }
 }
