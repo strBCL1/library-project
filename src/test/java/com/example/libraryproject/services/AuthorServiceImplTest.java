@@ -1,7 +1,9 @@
 package com.example.libraryproject.services;
 
 import com.example.libraryproject.api.v1.mapper.AuthorMapper;
+import com.example.libraryproject.api.v1.mapper.BookMapper;
 import com.example.libraryproject.api.v1.model.AuthorDTO;
+import com.example.libraryproject.api.v1.model.BookDTO;
 import com.example.libraryproject.domain.Author;
 import com.example.libraryproject.domain.Book;
 import com.example.libraryproject.repositories.AuthorRepository;
@@ -11,6 +13,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -102,14 +105,36 @@ class AuthorServiceImplTest {
 
     @Test
     void givenAuthorDto_whenCreateAuthor_thenAuthorDtoEqualsToSavedAuthorDto() {
-
         AuthorDTO authorDTO = new AuthorDTO();
         authorDTO.setId(ID);
         authorDTO.setFirstname("firstname");
+        authorDTO.setLastname("lastname");
+
+        BookDTO bookDto1 = new BookDTO();
+        bookDto1.setId(ID);
+        bookDto1.setTitle("book1");
+
+        BookDTO bookDto2 = new BookDTO();
+        bookDto2.setId(ID + 1);
+        bookDto2.setTitle("book2");
+
+        authorDTO.setBookDTOSet(Set.of(bookDto1, bookDto2));
+
 
         Author savedAuthor = new Author();
         savedAuthor.setId(authorDTO.getId());
         savedAuthor.setFirstname(authorDTO.getFirstname());
+        savedAuthor.setLastname(authorDTO.getLastname());
+
+        Book book1 = new Book();
+        book1.setId(bookDto1.getId());
+        book1.setTitle(bookDto1.getTitle());
+        savedAuthor.getBooks().add(book1);
+
+        Book book2 = new Book();
+        book2.setId(bookDto2.getId());
+        book2.setTitle(bookDto2.getTitle());
+        savedAuthor.getBooks().add(book2);
 
         when(authorRepository.save(any(Author.class))).thenReturn(savedAuthor);
 
@@ -117,7 +142,9 @@ class AuthorServiceImplTest {
 
         assertAll("AuthorDto must have same fields as savedAuthorDto",
                 () -> assertEquals(savedAuthorDTO.getId(), authorDTO.getId()),
-                () -> assertEquals(savedAuthorDTO.getFirstname(), authorDTO.getFirstname()));
+                () -> assertEquals(savedAuthorDTO.getFirstname(), authorDTO.getFirstname()),
+                () -> assertEquals(savedAuthorDTO.getLastname(), authorDTO.getLastname()),
+                () -> assertEquals(savedAuthorDTO.getBookDTOSet().size(), authorDTO.getBookDTOSet().size()));
     }
 
     @Test
