@@ -17,19 +17,4 @@ public class Book {
     private int id;
 
     private String title;
-
-    @ManyToMany(mappedBy = "books", cascade = { CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH })
-    private Set<Author> authors = new HashSet<>();
-
-    public void setAuthors(Set<Author> authors) {
-        addBookTo(authors);
-
-        this.authors = authors;
-    }
-
-    private void addBookTo(Set<Author> authors) {
-        for (Author author : authors) {
-            author.getBooks().add(this);
-        }
-    }
 }

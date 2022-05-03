@@ -32,21 +32,4 @@ class BookTest {
 
         assertEquals(title, book.getTitle());
     }
-
-    @Test
-    void givenAuthors_whenBookSetAuthors_thenAuthorsEqualToBookAuthors() {
-        Author author1 = new Author();
-        Author author2 = new Author();
-
-        Set<Author> authors = Set.of(author1, author2);
-
-        book.setAuthors(authors);
-
-        assertAll("Checking book's authors",
-                () -> assertTrue(author1.getBooks().contains(book)),
-                () -> assertTrue(author2.getBooks().contains(book)),
-                () -> assertTrue(book.getAuthors().contains(author1)),
-                () -> assertTrue(book.getAuthors().contains(author2))
-        );
-    }
 }
