@@ -76,15 +76,28 @@ class AuthorServiceImplTest {
 
     @Test
     void givenIdAndAuthor_whenGetAuthorById_thenIdEqualsToAuthorDtoId() {
-
         Author author = new Author();
         author.setId(ID);
+
+        Book book1 = new Book();
+        book1.setId(ID);
+        book1.setTitle("book1");
+        author.getBooks().add(book1);
+
+        Book book2 = new Book();
+        book2.setId(ID + 1);
+        book2.setTitle("book2");
+        author.getBooks().add(book2);
 
         when(authorRepository.findById(anyInt())).thenReturn(Optional.ofNullable(author));
 
         AuthorDTO authorDTO = authorService.getAuthorById(author.getId());
 
-        assertEquals(ID, authorDTO.getId());
+        assertAll("AuthorDto must have same content as Author",
+                () -> assertEquals(author.getId(), authorDTO.getId()),
+                () -> assertEquals(author.getFirstname(), authorDTO.getFirstname()),
+                () -> assertEquals(author.getLastname(), authorDTO.getLastname()),
+                () -> assertEquals(author.getBooks().size(), authorDTO.getBookDTOSet().size()));
     }
 
     @Test
