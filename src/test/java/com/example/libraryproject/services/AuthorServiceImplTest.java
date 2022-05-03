@@ -1,7 +1,6 @@
 package com.example.libraryproject.services;
 
 import com.example.libraryproject.api.v1.mapper.AuthorMapper;
-import com.example.libraryproject.api.v1.mapper.BookMapper;
 import com.example.libraryproject.api.v1.model.AuthorDTO;
 import com.example.libraryproject.api.v1.model.BookDTO;
 import com.example.libraryproject.domain.Author;
@@ -12,8 +11,10 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -193,6 +194,20 @@ class AuthorServiceImplTest {
 
     @Test
     void givenAuthorId_whenDeleteAuthorById_thenVerifyDeleteWasCalledOnce() {
+        Author author = new Author();
+        author.setId(ID);
+        author.setFirstname(FIRSTNAME);
+        author.setLastname(LASTNAME);
+
+        Book book1 = new Book();
+        book1.setId(1);
+        book1.setTitle("book1");
+        author.getBooks().add(book1);
+
+        Book book2 = new Book();
+        book2.setId(2);
+        book2.setTitle("book2");
+        author.getBooks().add(book2);
 
         authorService.deleteAuthorById(ID);
 
