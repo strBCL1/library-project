@@ -3,14 +3,14 @@ package com.example.libraryproject.services;
 import com.example.libraryproject.api.v1.mapper.AuthorMapper;
 import com.example.libraryproject.api.v1.model.AuthorDTO;
 import com.example.libraryproject.domain.Author;
+import com.example.libraryproject.domain.Book;
 import com.example.libraryproject.repositories.AuthorRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -27,7 +27,9 @@ class AuthorServiceImplTest {
 
     AuthorService authorService;
 
-    final static int ID = 1;
+    private final static int ID = 1;
+    private final static String FIRSTNAME = "FIRSTNAME";
+    private final static String LASTNAME = "LASTNAME";
 
     @BeforeEach
     void setUp() {
@@ -37,20 +39,39 @@ class AuthorServiceImplTest {
     }
 
     @Test
-    void givenAuthorsList_whenGetAllAuthors_thenReturnAuthorsList() {
+    void givenAuthorsList_whenGetAllAuthors_thenReturnAuthorsDtoList() {
         Author author1 = new Author();
-        author1.setId(1);
+        author1.setId(ID);
+        author1.setFirstname(FIRSTNAME + "1");
+        author1.setLastname(LASTNAME + "1");
 
         Author author2 = new Author();
-        author2.setId(2);
+        author2.setId(ID + 1);
+        author2.setFirstname(FIRSTNAME + "2");
+        author2.setLastname(LASTNAME + "2");
 
-        List<Author> authorList = List.of(author1, author2);
+        Book book1 = new Book();
+        book1.setId(ID);
+        book1.setTitle("book1");
+        author1.getBooks().add(book1);
+        author2.getBooks().add(book1);
+
+        Book book2 = new Book();
+        book2.setId(ID + 1);
+        book2.setTitle("book2");
+        author2.getBooks().add(book2);
+
+        List<Author> authorList = Arrays.asList(author1, author2);
 
         when(authorRepository.findAll()).thenReturn(authorList);
 
         List<AuthorDTO> authorDTOList = authorService.getAllAuthors();
 
-        assertEquals(authorList.size(), authorDTOList.size());
+        assertAll("AuthorDto list must have same content as AuthorList",
+                () -> assertEquals(authorList.size(), authorDTOList.size()),
+                () -> assertEquals(author1.getId(), authorDTOList.get(0).getId()),
+                () -> assertEquals(author2.getId(), authorDTOList.get(1).getId()));
+
     }
 
     @Test
