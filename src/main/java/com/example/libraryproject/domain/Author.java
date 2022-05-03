@@ -26,16 +26,4 @@ public class Author {
             inverseJoinColumns = @JoinColumn(name = "BOOK_ID")
     )
     private Set<Book> books = new HashSet<>();
-
-    public void setBooks(Set<Book> books) {
-        addAuthorTo(books);
-
-        this.books = books;
-    }
-
-    private void addAuthorTo(Set<Book> books) {
-        for (Book book : books) {
-            book.getAuthors().add(this);
-        }
-    }
 }
