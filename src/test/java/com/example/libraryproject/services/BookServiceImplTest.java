@@ -89,4 +89,21 @@ class BookServiceImplTest {
                 () -> assertEquals(bookDTO.getId(), savedBookDto.getId()),
                 () -> assertEquals(bookDTO.getTitle(), savedBookDto.getTitle()));
     }
+
+    @Test
+    void givenIdAndBookDto_whenUpdateBookById_thenBookDtoEqualsToUpdatedBookDto() {
+        BookDTO bookDTO = new BookDTO(ID, TITLE);
+
+        Book book = new Book();
+        book.setId(bookDTO.getId());
+        book.setTitle(bookDTO.getTitle());
+
+        when(bookRepository.save(any(Book.class))).thenReturn(book);
+
+        BookDTO updatedBookDTO = bookService.updateBookById(ID, bookDTO);
+
+        assertAll("UpdatedBookDto must have same fields as BookDto",
+                () -> assertEquals(bookDTO.getId(), updatedBookDTO.getId()),
+                () -> assertEquals(bookDTO.getTitle(), updatedBookDTO.getTitle()));
+    }
 }

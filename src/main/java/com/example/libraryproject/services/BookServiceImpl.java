@@ -38,6 +38,13 @@ public class BookServiceImpl implements BookService {
         return saveAndReturn(bookDTO);
     }
 
+    @Override
+    public BookDTO updateBookById(int id, BookDTO bookDTO) {
+        bookDTO.setId(id);
+
+        return saveAndReturn(bookDTO);
+    }
+
     private BookDTO saveAndReturn(BookDTO bookDTO) {
         Book book = bookMapper.bookDtoToBook(bookDTO);
 

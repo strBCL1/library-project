@@ -10,4 +10,6 @@ public interface BookService {
     BookDTO getBookById(int id);
 
     BookDTO createBook(BookDTO bookDTO);
+
+    BookDTO updateBookById(int id, BookDTO bookDTO);
 }
