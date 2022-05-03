@@ -15,6 +15,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import static org.hamcrest.Matchers.equalTo;
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -51,5 +52,20 @@ class BookControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.bookDTOList[0].title", equalTo(bookDTOList.get(0).getTitle())))
                 .andExpect(jsonPath("$.bookDTOList[1].title", equalTo(bookDTOList.get(1).getTitle())));
+    }
+
+    @Test
+    void givenIdAndBookDto_whenGetBookById_thenReturnBookDto() throws Exception {
+        final int ID = 1;
+
+        BookDTO bookDTO = new BookDTO(ID, "TITLE");
+
+        when(bookService.getBookById(anyInt())).thenReturn(bookDTO);
+
+        mockMvc.perform(get("/books/" + ID).contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id", equalTo(bookDTO.getId())))
+                .andExpect(jsonPath("$.title", equalTo(bookDTO.getTitle())));
     }
 }
