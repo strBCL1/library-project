@@ -6,7 +6,6 @@ import java.util.List;
 
 public interface AuthorService {
 
-    // TODO: implement CRUD operations on author's books
     List<AuthorDTO> getAllAuthors();
 
     AuthorDTO getAuthorById(int id);

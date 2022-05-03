@@ -8,4 +8,6 @@ public interface BookService {
     List<BookDTO> getAllBooks();
 
     BookDTO getBookById(int id);
+
+    BookDTO createBook(BookDTO bookDTO);
 }

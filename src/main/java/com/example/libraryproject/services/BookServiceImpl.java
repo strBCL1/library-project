@@ -2,6 +2,7 @@ package com.example.libraryproject.services;
 
 import com.example.libraryproject.api.v1.mapper.BookMapper;
 import com.example.libraryproject.api.v1.model.BookDTO;
+import com.example.libraryproject.domain.Book;
 import com.example.libraryproject.repositories.BookRepository;
 import org.springframework.stereotype.Service;
 
@@ -30,5 +31,18 @@ public class BookServiceImpl implements BookService {
         return bookRepository.findById(id)
                 .map(bookMapper::bookToBookDto)
                 .orElse(null);
+    }
+
+    @Override
+    public BookDTO createBook(BookDTO bookDTO) {
+        return saveAndReturn(bookDTO);
+    }
+
+    private BookDTO saveAndReturn(BookDTO bookDTO) {
+        Book book = bookMapper.bookDtoToBook(bookDTO);
+
+        Book savedBook = bookRepository.save(book);
+
+        return bookMapper.bookToBookDto(savedBook);
     }
 }

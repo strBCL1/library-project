@@ -14,6 +14,7 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.when;
 
@@ -59,20 +60,33 @@ class BookServiceImplTest {
 
     @Test
     void givenIdAndBookDto_whenGetBookById_thenBookDtoEqualsToReturnBookDto() {
-        BookDTO bookDTO = new BookDTO();
-        bookDTO.setId(ID);
-        bookDTO.setTitle("book");
+        Book book = new Book();
+        book.setId(ID);
+        book.setTitle("book");
 
-        Book returnBook = new Book();
-        returnBook.setId(ID);
-        returnBook.setTitle("book");
+        when(bookRepository.findById(anyInt())).thenReturn(Optional.of(book));
 
-        when(bookRepository.findById(anyInt())).thenReturn(Optional.of(returnBook));
-
-        BookDTO returnBookDTO = bookService.getBookById(bookDTO.getId());
+        BookDTO bookDTO = bookService.getBookById(book.getId());
 
         assertAll("returnBookDto must have same fields as bookDto",
-                () -> assertEquals(bookDTO.getId(), returnBookDTO.getId()),
-                () -> assertEquals(bookDTO.getTitle(), returnBookDTO.getTitle()));
+                () -> assertEquals(book.getId(), bookDTO.getId()),
+                () -> assertEquals(book.getTitle(), bookDTO.getTitle()));
+    }
+
+    @Test
+    void givenBookDto_whenCreateBook_thenBookDtoEqualsToSavedBookDto() {
+        BookDTO bookDTO = new BookDTO(ID, TITLE);
+
+        Book book = new Book();
+        book.setId(bookDTO.getId());
+        book.setTitle(bookDTO.getTitle());
+
+        when(bookRepository.save(any(Book.class))).thenReturn(book);
+
+        BookDTO savedBookDto = bookService.createBook(bookDTO);
+
+        assertAll("SavedBookDto must have same fields as BookDto",
+                () -> assertEquals(bookDTO.getId(), savedBookDto.getId()),
+                () -> assertEquals(bookDTO.getTitle(), savedBookDto.getTitle()));
     }
 }
