@@ -24,4 +24,11 @@ public class BookServiceImpl implements BookService {
                 .map(bookMapper::bookToBookDto)
                 .toList();
     }
+
+    @Override
+    public BookDTO getBookById(int id) {
+        return bookRepository.findById(id)
+                .map(bookMapper::bookToBookDto)
+                .orElse(null);
+    }
 }

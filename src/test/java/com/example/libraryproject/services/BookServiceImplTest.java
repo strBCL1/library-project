@@ -10,9 +10,11 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.when;
 
 class BookServiceImplTest {
@@ -53,5 +55,24 @@ class BookServiceImplTest {
         assertAll("BookDtoList must have same content as BookList",
                 () -> assertEquals(bookList.size(), bookDTOList.size()),
                 () -> assertEquals(bookList.get(0).getTitle(), bookDTOList.get(0).getTitle()));
+    }
+
+    @Test
+    void givenIdAndBookDto_whenGetBookById_thenBookDtoEqualsToReturnBookDto() {
+        BookDTO bookDTO = new BookDTO();
+        bookDTO.setId(ID);
+        bookDTO.setTitle("book");
+
+        Book returnBook = new Book();
+        returnBook.setId(ID);
+        returnBook.setTitle("book");
+
+        when(bookRepository.findById(anyInt())).thenReturn(Optional.of(returnBook));
+
+        BookDTO returnBookDTO = bookService.getBookById(bookDTO.getId());
+
+        assertAll("returnBookDto must have same fields as bookDto",
+                () -> assertEquals(bookDTO.getId(), returnBookDTO.getId()),
+                () -> assertEquals(bookDTO.getTitle(), returnBookDTO.getTitle()));
     }
 }
